@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>CULT. Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0b0c0d;--p1:#131517;--p2:#1a1d20;--line:rgba(255,255,255,.1);--line2:rgba(255,255,255,.2);--txt:#f2efe8;--dim:rgba(242,239,232,.55);--a:#33e07a;--a2:#2dc56b;--ar:51,224,122;--red:#ff5d5d;--amber:#ffc24a}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--txt);font:14px/1.45 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;background:none;border:0}
+a{color:var(--a)}
+.u{font-family:Unbounded,Inter,sans-serif}
+header{position:sticky;top:0;z-index:20;background:rgba(11,12,13,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.hd{display:flex;align-items:center;gap:14px;padding:14px 22px;max-width:1400px;margin:0 auto}
+.logo{font-family:Unbounded;font-weight:800;letter-spacing:.16em;font-size:18px}
+.logo i{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--a);margin-left:3px;box-shadow:0 0 10px var(--a)}
+.logo small{font-family:Inter;font-weight:600;letter-spacing:.2em;font-size:10px;color:var(--dim);margin-left:10px;text-transform:uppercase}
+.sp{flex:1}
+.state{font-size:12px;color:var(--dim);display:flex;align-items:center;gap:8px;white-space:nowrap}
+.state b{width:8px;height:8px;border-radius:50%;background:var(--dim)}
+.state.dirty b{background:var(--amber);box-shadow:0 0 8px var(--amber)}
+.state.ok b{background:var(--a)}
+.btn{height:38px;padding:0 14px;border-radius:10px;border:1px solid var(--line2);display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:13px;white-space:nowrap;transition:background .15s,border-color .15s}
+.btn:hover{background:rgba(255,255,255,.06)}
+.btn.pri{background:var(--a2);border-color:var(--a2);color:#04140a}
+.btn.pri:hover{background:var(--a)}
+.btn.danger{color:var(--red);border-color:rgba(255,93,93,.4)}
+.btn.sm{height:32px;padding:0 10px;font-size:12px;border-radius:8px}
+.btn svg{width:16px;height:16px}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+main{max-width:1400px;margin:0 auto;padding:18px 22px 140px}
+.banner{display:none;align-items:center;gap:12px;padding:12px 16px;border-radius:12px;margin-bottom:14px;background:rgba(255,194,74,.08);border:1px solid rgba(255,194,74,.3);font-size:13px}
+.banner.on{display:flex}
+.banner.info{background:rgba(var(--ar),.06);border-color:rgba(var(--ar),.3)}
+.tools{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:14px}
+.in{height:38px;border-radius:10px;border:1px solid var(--line2);background:var(--p1);padding:0 12px;min-width:0;outline:none}
+.in:focus{border-color:var(--a)}
+textarea.in{height:auto;padding:10px 12px;resize:vertical;min-height:80px}
+select.in{padding-right:28px}
+.search{flex:1;min-width:200px}
+.stats{display:flex;gap:18px;font-size:12px;color:var(--dim);margin:0 0 10px 2px;flex-wrap:wrap}
+.stats b{color:var(--txt);font-weight:600}
+/* list */
+.list{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--p1)}
+.row{display:grid;grid-template-columns:34px 64px minmax(180px,2fr) 110px 140px 170px 170px 190px 44px;gap:12px;align-items:center;padding:10px 14px;border-top:1px solid var(--line)}
+.row.head{border-top:0;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);background:var(--p2);padding:10px 14px}
+.row.sel{background:rgba(var(--ar),.06)}
+.row.hid{opacity:.5}
+.ck{width:18px;height:18px;accent-color:var(--a);cursor:pointer}
+.th{width:64px;height:48px;border-radius:8px;background:#22262a center/contain no-repeat;border:1px solid var(--line);cursor:pointer;position:relative}
+.th.none{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='1.5'%3E%3Crect x='3' y='5' width='18' height='14' rx='2'/%3E%3Ccircle cx='9' cy='10' r='2'/%3E%3Cpath d='M21 16l-5-5-8 8'/%3E%3C/svg%3E");background-size:22px}
+.th span{position:absolute;right:-6px;top:-6px;font-size:10px;background:var(--p2);border:1px solid var(--line2);border-radius:8px;padding:0 5px}
+.nm input{width:100%;background:transparent;border:1px solid transparent;border-radius:6px;padding:3px 6px;outline:none}
+.nm input:hover{border-color:var(--line)}
+.nm input:focus{border-color:var(--a);background:var(--bg)}
+.nm .n{font-weight:600}
+.nm .c{color:var(--dim);font-size:12.5px}
+.cell-in{width:100%;height:32px;border-radius:8px;border:1px solid var(--line);background:transparent;padding:0 8px;outline:none}
+.cell-in:focus{border-color:var(--a);background:var(--bg)}
+.price{position:relative}
+.price input{padding-left:22px}
+.price::before{content:"R";position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--dim);font-size:12px}
+.sz{font-size:12px;color:var(--dim)}
+.sz b{color:var(--txt);font-weight:600}
+.sz em{color:var(--red);font-style:normal}
+.tg{display:flex;gap:6px;flex-wrap:wrap}
+.pill{height:26px;padding:0 9px;border-radius:999px;border:1px solid var(--line2);font-size:11.5px;font-weight:600;color:var(--dim)}
+.pill.on{color:#04140a;background:var(--a);border-color:var(--a)}
+.pill.on.sale{background:var(--amber);border-color:var(--amber)}
+.pill.on.off{background:transparent;color:var(--red);border-color:rgba(255,93,93,.5)}
+.ic{width:36px;height:36px;border-radius:9px;display:grid;place-items:center;border:1px solid transparent}
+.ic:hover{border-color:var(--line2);background:rgba(255,255,255,.04)}
+.ic svg{width:18px;height:18px}
+.empty{padding:50px 20px;text-align:center;color:var(--dim)}
+/* bulk bar */
+#bulk{position:fixed;left:50%;bottom:18px;transform:translate(-50%,140%);z-index:30;display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center;max-width:calc(100vw - 24px);padding:10px 12px;border-radius:16px;background:#202427;border:1px solid var(--line2);box-shadow:0 20px 60px rgba(0,0,0,.6);transition:transform .25s}
+#bulk.on{transform:translate(-50%,0)}
+#bulk .cnt{font-weight:700;padding:0 8px;white-space:nowrap}
+/* drawer & modal */
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:40;opacity:0;pointer-events:none;transition:opacity .2s}
+.scrim.on{opacity:1;pointer-events:auto}
+#drawer{position:fixed;top:0;right:0;bottom:0;width:min(560px,100vw);z-index:41;background:var(--p1);border-left:1px solid var(--line);transform:translateX(100%);transition:transform .25s;display:flex;flex-direction:column}
+#drawer.on{transform:none}
+.dh{display:flex;align-items:center;gap:10px;padding:16px 20px;border-bottom:1px solid var(--line)}
+.dh h2{font-family:Unbounded;font-size:15px;font-weight:600;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.db{flex:1;overflow:auto;padding:18px 20px 30px;display:flex;flex-direction:column;gap:16px}
+.df{display:flex;gap:8px;padding:14px 20px;border-top:1px solid var(--line);flex-wrap:wrap}
+.f{display:flex;flex-direction:column;gap:6px}
+.f>span{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);font-weight:600}
+.f small{color:var(--dim);font-size:12px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.photos{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px}
+.ph{position:relative;aspect-ratio:4/3;border-radius:10px;border:1px solid var(--line);background:#22262a center/contain no-repeat}
+.ph.main{border-color:var(--a)}
+.ph .tag{position:absolute;left:6px;top:6px;font-size:10px;font-weight:700;background:var(--a);color:#04140a;border-radius:6px;padding:1px 6px}
+.ph .acts{position:absolute;right:4px;bottom:4px;display:flex;gap:4px}
+.ph .acts button{width:26px;height:26px;border-radius:7px;background:rgba(0,0,0,.7);display:grid;place-items:center;font-size:13px}
+.drop{aspect-ratio:4/3;border-radius:10px;border:1.5px dashed var(--line2);display:grid;place-items:center;text-align:center;color:var(--dim);font-size:12px;padding:8px;cursor:pointer}
+.drop:hover,.drop.over{border-color:var(--a);color:var(--a)}
+.sizes{display:grid;grid-template-columns:repeat(auto-fill,minmax(52px,1fr));gap:6px}
+.sizes button{height:40px;border-radius:9px;border:1px solid var(--line2);font-weight:600;color:var(--dim);position:relative}
+.sizes button.av{background:rgba(var(--ar),.14);border-color:var(--a);color:var(--txt)}
+.sizes button.so{border-color:rgba(255,93,93,.6);color:var(--red);text-decoration:line-through}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--dim);flex-wrap:wrap}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px;border:1px solid var(--line2)}
+.legend .l1{background:rgba(var(--ar),.3);border-color:var(--a)}
+.legend .l2{border-color:var(--red)}
+.sw{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;border:1px solid var(--line);border-radius:12px}
+.sw b{font-weight:600}
+.sw small{display:block;color:var(--dim);font-size:12px}
+.tog{position:relative;width:44px;height:26px;flex-shrink:0}
+.tog input{position:absolute;opacity:0;inset:0;cursor:pointer;z-index:1}
+.tog i{position:absolute;inset:0;border-radius:99px;background:#33383d;transition:background .15s}
+.tog i::after{content:"";position:absolute;left:3px;top:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .15s}
+.tog input:checked+i{background:var(--a2)}
+.tog input:checked+i::after{transform:translateX(18px)}
+#modal{position:fixed;left:50%;top:50%;z-index:51;width:min(520px,calc(100vw - 24px));max-height:calc(100vh - 40px);overflow:auto;transform:translate(-50%,-46%);opacity:0;pointer-events:none;transition:all .2s;background:var(--p1);border:1px solid var(--line2);border-radius:16px;padding:22px}
+#modal.on{opacity:1;pointer-events:auto;transform:translate(-50%,-50%)}
+#mscrim{z-index:50}
+#modal h3{font-family:Unbounded;font-size:16px;font-weight:600;margin-bottom:6px}
+#modal .lead{color:var(--dim);font-size:13px;margin-bottom:16px}
+#modal .mb{display:flex;flex-direction:column;gap:12px}
+#modal .mf{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}
+#modal ol{padding-left:20px;display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--dim)}
+#modal ol b{color:var(--txt)}
+.seg{display:flex;border:1px solid var(--line2);border-radius:10px;overflow:hidden}
+.seg button{flex:1;height:36px;font-size:12.5px;font-weight:600;color:var(--dim)}
+.seg button.on{background:var(--a2);color:#04140a}
+#toast{position:fixed;left:50%;top:18px;transform:translate(-50%,-30px);opacity:0;z-index:60;background:var(--a2);color:#04140a;font-weight:600;padding:10px 16px;border-radius:10px;transition:all .25s;pointer-events:none;max-width:calc(100vw - 30px)}
+#toast.on{transform:translate(-50%,0);opacity:1}
+body.dropping main{outline:2px dashed var(--a);outline-offset:-6px;border-radius:14px}
+#toast.err{background:var(--red);color:#fff}
+.prog{height:6px;border-radius:9px;background:var(--p2);overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--a);transition:width .2s}
+.menu{position:relative}
+.menu-pop{position:absolute;right:0;top:44px;min-width:250px;background:#202427;border:1px solid var(--line2);border-radius:12px;padding:6px;display:none;z-index:25;box-shadow:0 20px 50px rgba(0,0,0,.5)}
+.menu-pop.on{display:block}
+.menu-pop button{display:block;width:100%;text-align:left;padding:10px 12px;border-radius:8px;font-size:13px}
+.menu-pop button:hover{background:rgba(255,255,255,.06)}
+.menu-pop button small{display:block;color:var(--dim);font-size:11.5px}
+.menu-pop hr{border:0;border-top:1px solid var(--line);margin:6px 4px}
+.br-list{display:flex;flex-direction:column;gap:8px;max-height:52vh;overflow:auto;margin:0 -4px;padding:0 4px}
+.br-row{border:1px solid var(--line);border-radius:12px;padding:8px;background:var(--p2)}
+.br-row.open{border-color:rgba(var(--ar),.5)}
+.br-top{display:flex;align-items:center;gap:8px}
+.br-mv{display:flex;flex-direction:column}
+.br-mv button{width:26px;height:18px;font-size:12px;color:var(--dim);border-radius:5px}
+.br-mv button:hover:not(:disabled){background:rgba(255,255,255,.08);color:var(--txt)}
+.br-mv button:disabled{opacity:.25;cursor:default}
+.br-name{flex:1;height:34px;min-width:0}
+.br-meta{font-size:11.5px;color:var(--dim);white-space:nowrap}
+.br-del{width:32px;height:32px;color:var(--red)}
+.br-models{margin-top:10px}
+.br-add{display:flex;gap:8px;margin-top:12px}
+.br-add .in{flex:1}
+@media (max-width:640px){ .br-meta{display:none} }
+@media (max-width:1100px){
+  .row.head{display:none}
+  .row{grid-template-columns:30px 70px 1fr 40px;grid-template-areas:"ck th nm ed" "ck th br br" ". pr pr pr" ". sz sz sz" ". tg tg tg";row-gap:8px;padding:12px}
+  .row>.c-ck{grid-area:ck}.row>.c-th{grid-area:th}.row>.c-nm{grid-area:nm}.row>.c-ed{grid-area:ed}
+  .row>.c-br{grid-area:br;display:flex;gap:6px}.row>.c-md{display:none}
+  .row>.c-pr{grid-area:pr}.row>.c-sz{grid-area:sz}.row>.c-tg{grid-area:tg}
+  .c-br .cell-in{flex:1}
+}
+@media (max-width:640px){
+  .hd{padding:12px 14px;flex-wrap:wrap}
+  .logo small{display:none}
+  main{padding:14px 12px 160px}
+  .g2{grid-template-columns:1fr}
+  .state{order:5;width:100%}
+  .hd .btn .lbl{display:none}
+}
+</style>
+</head>
+<body>
+<header><div class="hd">
+  <div class="logo">CULT<i></i><small>Admin</small></div>
+  <div class="sp"></div>
+  <div class="state" id="state"><b></b><span>Loading…</span></div>
+  <button class="btn" id="b-brands"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><path d="M17.5 14v7M14 17.5h7"/></svg><span class="lbl">Brands</span></button>
+  <button class="btn" id="b-settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-1.8-.3 1.6 1.6 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.6 1.6 0 0 0-1-1.5 1.6 1.6 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.6 1.6 0 0 0 .3-1.8 1.6 1.6 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.6 1.6 0 0 0 1.5-1 1.6 1.6 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.6 1.6 0 0 0 1.8.3H9a1.6 1.6 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 1 1.5 1.6 1.6 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.8V9a1.6 1.6 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.5 1z"/></svg><span class="lbl">Shop settings</span></button>
+  <div class="menu">
+    <button class="btn pri" id="b-publish"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>Publish</button>
+    <div class="menu-pop" id="pub-pop">
+      <button data-pub="netlify"><b>Publish to my live site</b><small>Puts your changes online in one click (Netlify)</small></button>
+      <button data-pub="zip"><b>Download site (.zip)</b><small>Then drag it onto Netlify → Deploys</small></button>
+      <hr>
+      <button data-pub="json"><b>Download products.json only</b><small>A backup of every product and setting</small></button>
+      <button data-pub="discard"><b>Discard unpublished changes</b><small>Go back to what’s live on the site</small></button>
+    </div>
+  </div>
+</div></header>
+<main>
+  <div class="banner" id="bn-file"><span>⚠︎</span><span>You opened this page from a file. Open it from your live site instead — <b>your-site.netlify.app/admin.html</b> — so it can load and publish your products.</span></div>
+  <div class="banner" id="bn-mem"><span>⚠︎</span><span>This browser won’t let the admin save photos on this device (private browsing or a file preview). Your photos are added, but <b>publish before you close this page</b> or they’ll be lost.</span></div>
+  <div class="banner" id="bn-draft"><span>●</span><span id="bn-draft-t">You have unpublished changes. They’re saved on this device until you publish.</span><span class="sp"></span><button class="btn sm" id="bn-pub">Publish now</button></div>
+  <div class="tools">
+    <input class="in search" id="q" placeholder="Search name, colourway, model, brand…" autocomplete="off">
+    <select class="in" id="f-brand"><option value="">All brands</option></select>
+    <select class="in" id="f-show">
+      <option value="">All products</option><option value="visible">Visible on site</option><option value="hidden">Hidden</option>
+      <option value="sale">On sale</option><option value="new">New releases</option><option value="sold">Has sold-out sizes</option>
+      <option value="nophoto">No photo yet</option>
+    </select>
+    <button class="btn pri" id="b-add"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>Add shoe</button>
+    <button class="btn" id="b-photos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 16l-5-5-8 8"/></svg>Add from photos</button>
+    <div class="menu">
+      <button class="btn" id="b-more">Spreadsheet ▾</button>
+      <div class="menu-pop" id="more-pop">
+        <button data-more="export"><b>Export to spreadsheet (.csv)</b><small>Edit many shoes at once in Excel or Google Sheets</small></button>
+        <button data-more="import"><b>Import spreadsheet (.csv)</b><small>Updates matching shoes and adds new ones</small></button>
+        <hr>
+        <button data-more="restore"><b>Restore from products.json</b><small>Load a backup file</small></button>
+      </div>
+    </div>
+  </div>
+  <div class="stats" id="stats"></div>
+  <p class="hint" style="font-size:12px;color:var(--dim);margin:-4px 0 12px 2px">Tip: name a photo after the shoe (e.g. <b>aj4-bred.jpg</b> or <b>Air Jordan 4 Bred.jpg</b>) and “Add from photos” puts it on that shoe. You can also paste a copied photo (Ctrl+V) or drop photos anywhere on this page.</p>
+  <div class="list" id="list"></div>
+</main>
+
+<div id="bulk">
+  <span class="cnt" id="b-cnt">0 selected</span>
+  <button class="btn sm" data-bulk="price">Price</button>
+  <button class="btn sm" data-bulk="sale">Sale</button>
+  <button class="btn sm" data-bulk="new">New release</button>
+  <button class="btn sm" data-bulk="sizes">Sizes</button>
+  <button class="btn sm" data-bulk="brand">Brand / model</button>
+  <button class="btn sm" data-bulk="show">Show / hide</button>
+  <button class="btn sm" data-bulk="dup">Duplicate</button>
+  <button class="btn sm danger" data-bulk="del">Delete</button>
+  <button class="btn sm" data-bulk="clear">✕</button>
+</div>
+
+<div class="scrim" id="dscrim"></div>
+<aside id="drawer" aria-hidden="true">
+  <div class="dh"><h2 id="d-title">Edit shoe</h2><button class="ic" id="d-close" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <div class="db">
+    <div class="f"><span>Photos</span><div class="photos" id="d-photos"></div><small>The first photo is the main one on the site. A clean side view on a plain background looks best. Photos are resized automatically.</small></div>
+    <div class="g2">
+      <label class="f"><span>Name</span><input class="in" id="d-name" placeholder="e.g. Air Jordan 4"></label>
+      <label class="f"><span>Colourway</span><input class="in" id="d-cw" placeholder="e.g. Bred"></label>
+    </div>
+    <div class="g2">
+      <label class="f"><span>Brand</span><select class="in" id="d-brand"></select></label>
+      <label class="f"><span>Model</span><select class="in" id="d-model"></select></label>
+    </div>
+    <div class="g2">
+      <label class="f"><span>Price (R)</span><input class="in" id="d-price" type="number" min="0" step="1" inputmode="numeric"></label>
+      <div class="f"><span>Sale price</span><div class="in" id="d-saleprice" style="display:flex;align-items:center;color:var(--dim)">—</div></div>
+    </div>
+    <div class="f"><span>Sizes (UK)</span><div class="sizes" id="d-sizes"></div>
+      <div class="legend"><span><i></i>Not offered</span><span><i class="l1"></i>In stock</span><span><i class="l2"></i>Sold out</span><span>Tap a size to change it</span></div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn sm" data-sz="all">All in stock</button><button class="btn sm" data-sz="none">Clear</button><button class="btn sm" data-sz="std">UK 5–12</button><button class="btn sm" data-sz="half">Show half sizes</button></div></div>
+    <label class="f"><span>Description</span><textarea class="in" id="d-desc" rows="3" placeholder="Optional — shown on the product page"></textarea></label>
+    <div class="sw"><div><b>Show on the website</b><small>Turn off to hide it without deleting it</small></div><label class="tog"><input type="checkbox" id="d-vis"><i></i></label></div>
+    <div class="sw"><div><b>On sale</b><small id="d-sale-note">Gets the sale discount</small></div><label class="tog"><input type="checkbox" id="d-sale"><i></i></label></div>
+    <div class="sw"><div><b>New release</b><small>Also shows under New releases on the home page</small></div><label class="tog"><input type="checkbox" id="d-new"><i></i></label></div>
+    <div class="f"><span>Product code</span><input class="in" id="d-id" readonly style="color:var(--dim)"><small>Used in links and orders. Set automatically.</small></div>
+  </div>
+  <div class="df"><button class="btn" id="d-dup">Duplicate</button><button class="btn danger" id="d-del">Delete</button><span class="sp"></span><button class="btn pri" id="d-done">Done</button></div>
+</aside>
+
+<div class="scrim" id="mscrim"></div>
+<div id="modal" role="dialog" aria-modal="true"></div>
+<div id="toast"></div>
+<input type="file" id="fi-photos" accept="image/jpeg,image/png,image/webp,image/gif,image/*" multiple hidden>
+<input type="file" id="fi-one" accept="image/jpeg,image/png,image/webp,image/gif,image/*" multiple hidden>
+<input type="file" id="fi-csv" accept=".csv,text/csv" hidden>
+<input type="file" id="fi-json" accept=".json,application/json" hidden>
+
+<script>
+(()=>{
+'use strict';
+/* ---------------- constants ---------------- */
+const DEF_MAKES={"Nike":["Air Force 1","Dunk","Air Jordan 1 High OG","Air Max 1","Air Max 90","Air Max 95","Air Max 97","Shox R4","P-6000","Cortez","Blazer"],"Jordan":["Air Jordan 1","Air Jordan 3","Air Jordan 4","Air Jordan 5","Air Jordan 6","Air Jordan 11","Air Jordan 12","Air Jordan 13"],"New Balance":["990","574","550","530","2002R","1906R","327","9060","1000"],"Adidas":["Samba","Sambae","Gazelle","Superstar","Stan Smith","Handball Spezial","Forum","Campus","Ultraboost"],"Puma":["Suede Classic","Suede XL","Clyde","Palermo","Speedcat","RS-X"],"ASICS":["Gel-Lyte III","Gel-Kayano 14","Gel-1130","GT-2160","Gel-NYC","Gel-Nimbus"],"Salomon":["XT-6","XT-4","Speedcross","ACS Pro","XA Pro 3D"],"Converse":["Chuck Taylor All Star","Chuck 70","Jack Purcell","One Star","Weapon","Run Star Hike"],"Vans":["Authentic","Era","Old Skool","Slip-On","Sk8-Hi","Knu Skool"],"Under Armour":["Curry","HOVR Phantom","Charged Assert","Project Rock","Flow Velociti"]};
+let MAKES={}, BRANDS=[];
+const WHOLE=['3','4','5','6','7','8','9','10','11','12','13'];
+const HALF=['3','3.5','4','4.5','5','5.5','6','6.5','7','7.5','8','8.5','9','9.5','10','10.5','11','11.5','12','12.5','13'];
+const STD=['5','6','7','8','9','10','11','12'];
+const DEF_SETTINGS={sale:{on:false,name:'Sale',pct:15,ends:'2026-12-31T23:59:59+02:00',all:false},freeOver:2500,deliveryFee:null,returnsDays:7,brands:Object.keys(DEF_MAKES).map(n=>({name:n,makes:DEF_MAKES[n].slice()}))};
+function syncBrands(){ const bl=(data.settings.brands&&data.settings.brands.length)?data.settings.brands:DEF_SETTINGS.brands; MAKES={}; bl.forEach(b=>MAKES[b.name]=(b.makes||[]).slice()); BRANDS=bl.map(b=>b.name);
+  const f=$('f-brand'), v=f.value; f.innerHTML='<option value="">All brands</option>'+BRANDS.map(b=>`<option>${esc(b)}</option>`).join('')+'<option value="-">No brand (New releases only)</option>'; f.value=[...f.options].some(o=>o.value===v)?v:''; }
+const $=id=>document.getElementById(id);
+const esc=t=>String(t??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const R=n=>'R'+Math.round(+n||0).toLocaleString('en-ZA').replace(/[,\s ]/g,' ');
+const slug=t=>String(t||'').toLowerCase().normalize('NFKD').replace(/[̀-ͯ]/g,'').replace(/[“”"']/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,60)||'shoe';
+const sortSizes=a=>[...new Set(a.map(String))].sort((x,y)=>parseFloat(x)-parseFloat(y));
+const toast=(m,err)=>{ const t=$('toast'); t.textContent=m; t.classList.toggle('err',!!err); t.classList.add('on'); clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove('on'),err?5200:2600); };
+
+/* ---------------- storage (IndexedDB: draft + photos) ---------------- */
+const DB=(()=>{ let dbp=null;
+  const open=()=>dbp||(dbp=new Promise((res,rej)=>{ const r=indexedDB.open('cult-admin',1); r.onupgradeneeded=()=>{ r.result.createObjectStore('kv'); r.result.createObjectStore('blobs'); }; r.onsuccess=()=>res(r.result); r.onerror=()=>rej(r.error); }));
+  const tx=async(store,mode,fn)=>{ const db=await open(); return new Promise((res,rej)=>{ const t=db.transaction(store,mode); const s=t.objectStore(store); const out=fn(s); t.oncomplete=()=>res(out&&out.result!==undefined?out.result:out); t.onerror=()=>rej(t.error); }); };
+  return { get:(st,k)=>tx(st,'readonly',s=>s.get(k)), set:(st,k,v)=>tx(st,'readwrite',s=>s.put(v,k)), del:(st,k)=>tx(st,'readwrite',s=>s.delete(k)), clear:st=>tx(st,'readwrite',s=>s.clear()), keys:st=>tx(st,'readonly',s=>s.getAllKeys()) };
+})();
+const urls=new Map(); // image path -> object URL for photos not yet published
+const imgURL=p=>urls.get(p)||p;
+
+/* ---------------- state ---------------- */
+let data={settings:structuredClone(DEF_SETTINGS),products:[]};
+let live=null;            // JSON string of what's currently published
+let sel=new Set(), editId=null, dirty=false, showHalf=false;
+const P=id=>data.products.find(p=>p.id===id);
+const norm=p=>({id:p.id,brand:p.brand||'',model:p.model||'',name:p.name||'',colourway:p.colourway||'',price:Math.max(0,Math.round(+p.price||0)),
+  sizes:sortSizes(p.sizes||[]),soldOut:sortSizes((p.soldOut||[]).filter(s=>(p.sizes||[]).map(String).includes(String(s)))),images:(p.images||[]).slice(),
+  onSale:!!p.onSale,newRelease:!!p.newRelease,hidden:!!p.hidden,desc:p.desc||''});
+const snapshot=()=>JSON.stringify({settings:data.settings,products:data.products.map(norm)});
+let saveT=null;
+function changed(){ dirty=snapshot()!==live; paintState(); clearTimeout(saveT); saveT=setTimeout(()=>DB.set('kv','draft',{at:Date.now(),data:JSON.parse(snapshot()),live}).catch(()=>{}),300); }
+function paintState(){ const s=$('state'); s.className='state '+(dirty?'dirty':'ok'); s.querySelector('span').textContent=dirty?'Unpublished changes':'Everything is live';
+  $('bn-draft').classList.toggle('on',dirty); }
+function uniqueId(base){ let id=slug(base), n=2; while(P(id)) id=slug(base)+'-'+(n++); return id; }
+
+/* ---------------- load ---------------- */
+async function boot(){
+  if(location.protocol==='file:') $('bn-file').classList.add('on');
+  let pub=null;
+  try{ const r=await fetch('products.json?v='+Date.now(),{cache:'no-store'}); if(r.ok) pub=await r.json(); }catch(e){}
+  if(pub){ pub={settings:Object.assign(structuredClone(DEF_SETTINGS),pub.settings||{}),products:(pub.products||[]).map(norm)}; live=JSON.stringify(pub); }
+  let draft=null; try{ draft=await DB.get('kv','draft'); }catch(e){}
+  for(const k of await DB.keys('blobs').catch(()=>[])){ const b=await getBlob(k); if(b) urls.set(k,URL.createObjectURL(b)); }
+  if(draft&&draft.data&&(!pub||draft.live===live)){ data=draft.data; data.settings=Object.assign(structuredClone(DEF_SETTINGS),data.settings||{}); data.products=data.products.map(norm); }
+  else if(draft&&draft.data&&pub&&draft.live!==live){ data=pub; toast('Your site was updated elsewhere — loaded the live version'); }
+  else if(pub) data=pub;
+  if(live===null) live=JSON.stringify({settings:data.settings,products:[]});
+  syncBrands();
+  changed(); render();
+}
+
+/* ---------------- list ---------------- */
+function filtered(){
+  const q=$('q').value.trim().toLowerCase(), fb=$('f-brand').value, fs=$('f-show').value;
+  return data.products.filter(p=>{
+    if(fb==='-'?p.brand:fb&&p.brand!==fb) return false;
+    if(fs==='visible'&&p.hidden||fs==='hidden'&&!p.hidden||fs==='sale'&&!p.onSale||fs==='new'&&!p.newRelease||fs==='sold'&&!p.soldOut.length||fs==='nophoto'&&p.images.length) return false;
+    if(q&&!q.split(/\s+/).every(w=>(p.name+' '+p.colourway+' '+p.model+' '+p.brand+' '+p.id).toLowerCase().includes(w))) return false;
+    return true; });
+}
+const sizeSummary=p=>{ if(!p.sizes.length) return '<span class="sz"><em>No sizes</em></span>'; const a=p.sizes.filter(s=>!p.soldOut.includes(s));
+  const rng=p.sizes.length>1?`${p.sizes[0]}–${p.sizes[p.sizes.length-1]}`:p.sizes[0];
+  return `<span class="sz"><b>UK ${rng}</b> · ${a.length} in stock${p.soldOut.length?` · <em>${p.soldOut.length} sold out</em>`:''}</span>`; };
+function render(){
+  const L=filtered(); const S=data.settings;
+  const n=data.products.length, vis=data.products.filter(p=>!p.hidden).length, sale=data.products.filter(p=>p.onSale).length;
+  $('stats').innerHTML=`<span><b>${n}</b> products</span><span><b>${vis}</b> on the site</span><span><b>${data.products.filter(p=>p.newRelease&&!p.hidden).length}</b> new releases</span>`+
+    (S.sale&&S.sale.on?`<span>${esc(S.sale.name)} <b>${S.sale.pct}%</b> · ${S.sale.all?'whole store':`<b>${sale}</b> pairs on sale`} · ends ${new Date(S.sale.ends).toLocaleDateString('en-ZA',{day:'numeric',month:'short'})}</span>`:'<span>No sale running</span>')+
+    (L.length!==n?`<span>Showing <b>${L.length}</b></span>`:'');
+  const allSel=L.length&&L.every(p=>sel.has(p.id));
+  $('list').innerHTML=`<div class="row head"><span><input type="checkbox" class="ck" id="ck-all" ${allSel?'checked':''} aria-label="Select all"></span><span>Photo</span><span>Name · colourway</span><span>Price</span><span>Brand</span><span>Model</span><span>Sizes</span><span>On the site</span><span></span></div>`+
+   (L.length?L.map(p=>`<div class="row${sel.has(p.id)?' sel':''}${p.hidden?' hid':''}" data-id="${esc(p.id)}">
+    <span class="c-ck"><input type="checkbox" class="ck" data-ck ${sel.has(p.id)?'checked':''} aria-label="Select"></span>
+    <span class="c-th"><div class="th${p.images.length?'':' none'}" data-edit style="${p.images.length?`background-image:url('${esc(imgURL(p.images[0]))}')`:''}">${p.images.length>1?`<span>${p.images.length}</span>`:''}</div></span>
+    <span class="c-nm nm"><input class="n" data-f="name" value="${esc(p.name)}" placeholder="Name"><input class="c" data-f="colourway" value="${esc(p.colourway)}" placeholder="Colourway"></span>
+    <span class="c-pr price"><input class="cell-in" data-f="price" type="number" min="0" inputmode="numeric" value="${p.price}"></span>
+    <span class="c-br"><select class="cell-in" data-f="brand">${brandOpts(p.brand)}</select><select class="cell-in mobile-md" data-f="model" style="display:none">${modelOpts(p.brand,p.model)}</select></span>
+    <span class="c-md"><select class="cell-in" data-f="model">${modelOpts(p.brand,p.model)}</select></span>
+    <span class="c-sz">${sizeSummary(p)}</span>
+    <span class="c-tg tg"><button class="pill${p.hidden?' on off':' on'}" data-t="hidden">${p.hidden?'Hidden':'Visible'}</button><button class="pill sale${p.onSale?' on':''}" data-t="onSale">Sale</button><button class="pill${p.newRelease?' on':''}" data-t="newRelease">New</button></span>
+    <span class="c-ed"><button class="ic" data-edit aria-label="Edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13 7l4 4"/></svg></button></span>
+   </div>`).join(''):`<div class="empty">${n?'No shoes match your search.':'No shoes yet. Tap <b>Add shoe</b> or <b>Add from photos</b> to start.'}</div>`);
+  if(matchMedia('(max-width:1100px)').matches) document.querySelectorAll('.mobile-md').forEach(e=>e.style.display='');
+  paintBulk();
+}
+function brandOpts(b){ return `<option value="">No brand</option>`+BRANDS.map(x=>`<option${x===b?' selected':''}>${esc(x)}</option>`).join(''); }
+function modelOpts(b,m){ const l=MAKES[b]||[]; const known=l.some(x=>x.toLowerCase()===String(m).toLowerCase());
+  return `<option value="">${b?'Model…':'—'}</option>`+l.map(x=>`<option${x.toLowerCase()===String(m).toLowerCase()?' selected':''}>${esc(x)}</option>`).join('')+(m&&!known?`<option selected>${esc(m)}</option>`:''); }
+function paintBulk(){ $('b-cnt').textContent=`${sel.size} selected`; $('bulk').classList.toggle('on',sel.size>0); }
+
+$('list').addEventListener('click',e=>{
+  if(e.target.id==='ck-all'){ const L=filtered(); if(e.target.checked) L.forEach(p=>sel.add(p.id)); else L.forEach(p=>sel.delete(p.id)); render(); return; }
+  const row=e.target.closest('.row[data-id]'); if(!row) return; const p=P(row.dataset.id);
+  if(e.target.matches('[data-ck]')){ e.target.checked?sel.add(p.id):sel.delete(p.id); row.classList.toggle('sel',e.target.checked); paintBulk(); return; }
+  const t=e.target.closest('[data-t]'); if(t){ const k=t.dataset.t; p[k]=!p[k]; if(k==='onSale'&&p.onSale&&data.settings.sale.all) toast('Your sale is set to the whole store — switch it to “selected pairs” in Shop settings'); changed(); render(); return; }
+  if(e.target.closest('[data-edit]')) openEdit(p.id);
+});
+$('list').addEventListener('change',e=>{
+  const row=e.target.closest('.row[data-id]'); const f=e.target.dataset.f; if(!row||!f) return; const p=P(row.dataset.id);
+  if(f==='price') p.price=Math.max(0,Math.round(+e.target.value||0));
+  else if(f==='brand'){ p.brand=e.target.value; if(!(MAKES[p.brand]||[]).includes(p.model)) p.model=''; }
+  else p[f]=e.target.value.trim();
+  changed(); if(f==='brand'||f==='model') render();
+});
+['q','f-brand','f-show'].forEach(id=>$(id).addEventListener('input',render));
+
+/* ---------------- photos ---------------- */
+/* photo storage: IndexedDB blob → IndexedDB bytes (older Safari) → memory (private browsing / file previews) */
+const mem=new Map(); let memWarned=false;
+async function putBlob(path,blob){
+  try{ await DB.set('blobs',path,blob); return; }catch(e){}
+  try{ await DB.set('blobs',path,{t:blob.type,b:await blob.arrayBuffer()}); return; }catch(e){}
+  mem.set(path,blob);
+  if(!memWarned){ memWarned=true; $('bn-mem').classList.add('on'); }
+}
+async function getBlob(path){
+  if(mem.has(path)) return mem.get(path);
+  let v=null; try{ v=await DB.get('blobs',path); }catch(e){}
+  if(v&&v.b) return new Blob([v.b],{type:v.t||'image/jpeg'});
+  return v||null;
+}
+async function delBlob(path){ mem.delete(path); try{ await DB.del('blobs',path); }catch(e){} }
+const isHeic=f=>/hei[cf]/i.test(f.type)||/\.(heic|heif)$/i.test(f.name);
+const looksImage=f=>/^image\//.test(f.type)||/\.(jpe?g|png|webp|gif|avif|heic|heif|bmp)$/i.test(f.name);
+const loadImg=src=>new Promise((res,rej)=>{ const i=new Image(); i.onload=()=>res(i); i.onerror=()=>rej(new Error('decode')); i.src=src; });
+async function decode(file){
+  if(window.createImageBitmap){ try{ return await createImageBitmap(file); }catch(e){} }
+  const u=URL.createObjectURL(file); try{ return await loadImg(u); }catch(e){}
+  const d=await new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>res(r.result); r.onerror=()=>rej(new Error('read')); r.readAsDataURL(file); });
+  return await loadImg(d);
+}
+async function processImage(file){
+  let img;
+  try{ img=await decode(file); }catch(e){ const err=new Error(isHeic(file)?'heic':'decode'); throw err; }
+  const w0=img.naturalWidth||img.width, h0=img.naturalHeight||img.height; if(!w0||!h0) throw new Error('decode');
+  const k=Math.min(1,1400/Math.max(w0,h0)); const w=Math.max(1,Math.round(w0*k)), h=Math.max(1,Math.round(h0*k));
+  let blob=null, ext='jpg';
+  try{
+    const c=document.createElement('canvas'); c.width=w; c.height=h; const g=c.getContext('2d');
+    g.fillStyle='#fff'; g.fillRect(0,0,w,h); g.drawImage(img,0,0,w,h);
+    blob=await new Promise(r=>c.toBlob(r,'image/webp',.86)); ext='webp';
+    if(!blob||blob.type!=='image/webp'){ blob=await new Promise(r=>c.toBlob(r,'image/jpeg',.88)); ext='jpg'; }
+  }catch(e){ blob=null; }
+  if(!blob){ // couldn't resize — keep the original if it's a web-friendly format
+    const m=/^image\/(jpeg|png|webp|gif)$/.exec(file.type); if(!m) throw new Error('decode');
+    blob=file; ext={jpeg:'jpg',png:'png',webp:'webp',gif:'gif'}[m[1]];
+  }
+  return {blob,ext};
+}
+function photoHelp(heic,other){
+  const L=[];
+  if(heic.length) L.push(`<p class="lead"><b>${heic.map(esc).join(', ')}</b> ${heic.length>1?'are iPhone HEIC photos':'is an iPhone HEIC photo'}, which this browser can’t open.</p>
+    <ol><li>Easiest: open the photo on your phone, take a <b>screenshot</b> of it, and add the screenshot.</li><li>Or on your iPhone: <b>Settings → Camera → Formats → Most Compatible</b>, so new photos save as JPG.</li><li>Or open this admin page in <b>Safari</b> on your iPhone — it converts HEIC automatically.</li></ol>`);
+  if(other.length) L.push(`<p class="lead" style="margin-top:12px"><b>${other.map(esc).join(', ')}</b> couldn’t be opened. Save ${other.length>1?'them':'it'} as a JPG or PNG (a screenshot works too) and try again.</p>`);
+  modal(`<h3>Some photos couldn’t be added</h3>${L.join('')}<div class="mf"><button class="btn pri" data-x>OK</button></div>`);
+}
+async function addPhotos(p,files){
+  let n=0; const heic=[], bad=[];
+  for(const f of files){ if(!looksImage(f)){ bad.push(f.name); continue; }
+    let r; try{ r=await processImage(f); }catch(e){ (e.message==='heic'?heic:bad).push(f.name); continue; }
+    const path=`images/${p.id}-${Date.now().toString(36)}${Math.random().toString(36).slice(2,5)}.${r.ext}`;
+    await putBlob(path,r.blob); urls.set(path,URL.createObjectURL(r.blob)); p.images.push(path); n++; }
+  if(heic.length||bad.length) photoHelp(heic,bad);
+  return n;
+}
+$('b-photos').onclick=()=>$('fi-photos').click();
+$('fi-photos').onchange=e=>{ const files=[...e.target.files]; e.target.value=''; addFromPhotos(files); };
+// a photo named after a shoe (e.g. "aj4-bred.jpg", "Air Jordan 4 Bred 2.jpg") goes onto that shoe instead of making a new one
+function matchShoe(fname){
+  const b=slug(fname.replace(/\.[^.]+$/,'').replace(/\s*\(\d+\)$/,'')); const b2=b.replace(/-\d{1,2}$/,'');
+  for(const k of [b,b2]){ if(!k||k==='shoe') continue; const p=data.products.find(p=>p.id===k||slug(p.name+' '+p.colourway)===k||slug(p.brand+' '+p.name+' '+p.colourway)===k); if(p) return p; }
+  return null;
+}
+async function addFromPhotos(files){
+  files=files.filter(Boolean); if(!files.length) return;
+  toast(`Adding ${files.length} photo${files.length>1?'s':''}…`); const made=[], heic=[], bad=[], matched=new Set();
+  for(const f of files){
+    if(!looksImage(f)){ bad.push(f.name); continue; }
+    let r; try{ r=await processImage(f); }catch(err){ (err.message==='heic'?heic:bad).push(f.name); continue; }
+    const hit=matchShoe(f.name||'');
+    if(hit){ const path=`images/${hit.id}-${Date.now().toString(36)}${Math.random().toString(36).slice(2,5)}.${r.ext}`; await putBlob(path,r.blob); urls.set(path,URL.createObjectURL(r.blob)); hit.images.push(path); matched.add(hit.id); continue; }
+    const base=f.name.replace(/\.[^.]+$/,'').replace(/[_-]+/g,' ').replace(/\s+/g,' ').trim();
+    const nice=/^(img|image|dsc|pxl|photo|screenshot|whatsapp image)\b/i.test(base)||!base?'New shoe':base.replace(/\b\w/g,c=>c.toUpperCase());
+    const p=norm({id:uniqueId(nice==='New shoe'?'new-shoe':base),name:nice==='New shoe'?'':nice,price:0,sizes:STD,hidden:true});
+    const path=`images/${p.id}-${Date.now().toString(36)}${Math.random().toString(36).slice(2,5)}.${r.ext}`;
+    await putBlob(path,r.blob); urls.set(path,URL.createObjectURL(r.blob)); p.images.push(path);
+    data.products.unshift(p); made.push(p.id); }
+  if(made.length||matched.size){ sel=new Set(made); changed(); $('f-show').value=''; $('q').value=''; render();
+    toast([made.length?`Added ${made.length} new shoe${made.length>1?'s':''} (hidden until you set a price)`:'',matched.size?`added photos to ${matched.size} existing shoe${matched.size>1?'s':''}`:''].filter(Boolean).join(' · ')); }
+  if(heic.length||bad.length) photoHelp(heic,bad);
+}
+// paste a copied photo (Ctrl+V / ⌘V) or drop photos anywhere on the page
+const imgFiles=list=>[...(list||[])].filter(f=>f&&(/^image\//.test(f.type)||looksImage(f)));
+document.addEventListener('paste',async e=>{
+  if(e.target.matches&&e.target.matches('input,textarea')&&!(e.clipboardData&&e.clipboardData.files.length)) return;
+  const files=imgFiles(e.clipboardData&&e.clipboardData.files); if(!files.length) return; e.preventDefault();
+  const named=files.map((f,i)=>new File([f],(f.name&&!/^image\.\w+$/i.test(f.name))?f.name:`pasted-photo-${Date.now()}-${i}.png`,{type:f.type||'image/png'}));
+  if(editId){ const n=await addPhotos(P(editId),named); if(n){ changed(); paintEdit(); toast(`Pasted ${n} photo${n>1?'s':''}`); } }
+  else addFromPhotos(named);
+});
+document.addEventListener('dragover',e=>{ if(e.dataTransfer&&[...e.dataTransfer.types].includes('Files')){ e.preventDefault(); document.body.classList.add('dropping'); } });
+document.addEventListener('dragleave',e=>{ if(!e.relatedTarget) document.body.classList.remove('dropping'); });
+document.addEventListener('drop',e=>{ document.body.classList.remove('dropping'); if(e.defaultPrevented||editId) return; const f=imgFiles(e.dataTransfer&&e.dataTransfer.files); if(!f.length) return; e.preventDefault(); addFromPhotos(f); });
+
+/* ---------------- edit drawer ---------------- */
+function openEdit(id){ editId=id; paintEdit(); $('drawer').classList.add('on'); $('dscrim').classList.add('on'); $('drawer').setAttribute('aria-hidden','false'); }
+function closeEdit(){ $('drawer').classList.remove('on'); $('dscrim').classList.remove('on'); $('drawer').setAttribute('aria-hidden','true'); editId=null; render(); }
+$('d-close').onclick=closeEdit; $('dscrim').onclick=closeEdit; $('d-done').onclick=closeEdit;
+function paintEdit(){
+  const p=P(editId); if(!p) return closeEdit();
+  $('d-title').textContent=p.name?(p.name+(p.colourway?` “${p.colourway}”`:'')):'New shoe';
+  $('d-name').value=p.name; $('d-cw').value=p.colourway; $('d-price').value=p.price||''; $('d-desc').value=p.desc; $('d-id').value=p.id;
+  $('d-brand').innerHTML=brandOpts(p.brand); $('d-model').innerHTML=modelOpts(p.brand,p.model)+(p.brand?'<option value="__other">Other (type it)…</option>':'');
+  $('d-vis').checked=!p.hidden; $('d-sale').checked=p.onSale; $('d-new').checked=p.newRelease;
+  const S=data.settings.sale; const saleOn=S&&S.on; $('d-sale-note').textContent=!saleOn?'No sale running — set one up in Shop settings':S.all?`The whole store is on sale (${S.pct}%) — switch to selected pairs in Shop settings`:`Gets ${S.pct}% off during ${S.name}`;
+  $('d-saleprice').textContent=saleOn&&(S.all||p.onSale)?R(Math.round(p.price*(100-S.pct)/100)):'—';
+  const list=showHalf||p.sizes.some(s=>s.includes('.'))?HALF:WHOLE; const extra=p.sizes.filter(s=>!list.includes(s));
+  $('d-sizes').innerHTML=sortSizes([...list,...extra]).map(s=>`<button data-s="${s}" class="${p.soldOut.includes(s)?'so':p.sizes.includes(s)?'av':''}">${s}</button>`).join('');
+  $('d-photos').innerHTML=p.images.map((src,i)=>`<div class="ph${i===0?' main':''}" style="background-image:url('${esc(imgURL(src))}')">${i===0?'<span class="tag">Main</span>':''}<div class="acts">${i>0?`<button data-pi="${i}" data-pa="main" title="Make main photo">★</button>`:''}${i>0?`<button data-pi="${i}" data-pa="left" title="Move left">←</button>`:''}<button data-pi="${i}" data-pa="del" title="Remove">✕</button></div></div>`).join('')+
+    `<div class="drop" id="d-drop">＋ Add photos<br><small>tap or drop here</small></div>`;
+}
+const field=(id,fn)=>$(id).addEventListener('input',e=>{ const p=P(editId); if(!p) return; fn(p,e.target); changed(); if(id==='d-price') paintEdit2(p); });
+const paintEdit2=p=>{ const S=data.settings.sale; $('d-saleprice').textContent=S&&S.on&&(S.all||p.onSale)?R(Math.round(p.price*(100-S.pct)/100)):'—'; $('d-title').textContent=p.name?(p.name+(p.colourway?` “${p.colourway}”`:'')):'New shoe'; };
+field('d-name',(p,t)=>{ p.name=t.value; paintEdit2(p); }); field('d-cw',(p,t)=>{ p.colourway=t.value; paintEdit2(p); });
+field('d-price',(p,t)=>p.price=Math.max(0,Math.round(+t.value||0))); field('d-desc',(p,t)=>p.desc=t.value);
+$('d-brand').onchange=e=>{ const p=P(editId); p.brand=e.target.value; if(!(MAKES[p.brand]||[]).includes(p.model)) p.model=''; changed(); paintEdit(); };
+$('d-model').onchange=e=>{ const p=P(editId); let v=e.target.value; if(v==='__other'){ v=(prompt('Model name (it’s filed under a model on the brand page only if it matches one exactly):',p.model)||'').trim(); } p.model=v; changed(); paintEdit(); };
+$('d-vis').onchange=e=>{ P(editId).hidden=!e.target.checked; changed(); };
+$('d-sale').onchange=e=>{ P(editId).onSale=e.target.checked; changed(); paintEdit(); };
+$('d-new').onchange=e=>{ P(editId).newRelease=e.target.checked; changed(); };
+$('d-sizes').addEventListener('click',e=>{ const b=e.target.closest('[data-s]'); if(!b) return; const p=P(editId), s=b.dataset.s;
+  if(!p.sizes.includes(s)) p.sizes=sortSizes([...p.sizes,s]); else if(!p.soldOut.includes(s)) p.soldOut=sortSizes([...p.soldOut,s]); else { p.sizes=p.sizes.filter(x=>x!==s); p.soldOut=p.soldOut.filter(x=>x!==s); }
+  changed(); paintEdit(); });
+document.querySelectorAll('[data-sz]').forEach(b=>b.onclick=()=>{ const p=P(editId), k=b.dataset.sz;
+  if(k==='half'){ showHalf=!showHalf; b.textContent=showHalf?'Hide half sizes':'Show half sizes'; paintEdit(); return; }
+  if(k==='all'){ if(!p.sizes.length) p.sizes=STD.slice(); p.soldOut=[]; } if(k==='none'){ p.sizes=[]; p.soldOut=[]; } if(k==='std'){ p.sizes=STD.slice(); p.soldOut=[]; }
+  changed(); paintEdit(); });
+$('d-photos').addEventListener('click',e=>{
+  if(e.target.closest('#d-drop')){ $('fi-one').click(); return; }
+  const b=e.target.closest('[data-pa]'); if(!b) return; const p=P(editId), i=+b.dataset.pi;
+  if(b.dataset.pa==='del') p.images.splice(i,1);
+  if(b.dataset.pa==='main') p.images.unshift(p.images.splice(i,1)[0]);
+  if(b.dataset.pa==='left'&&i>0) [p.images[i-1],p.images[i]]=[p.images[i],p.images[i-1]];
+  changed(); paintEdit(); });
+$('d-photos').addEventListener('dragover',e=>{ e.preventDefault(); const d=$('d-drop'); d&&d.classList.add('over'); });
+$('d-photos').addEventListener('dragleave',()=>{ const d=$('d-drop'); d&&d.classList.remove('over'); });
+$('d-photos').addEventListener('drop',async e=>{ e.preventDefault(); const p=P(editId); const n=await addPhotos(p,[...e.dataTransfer.files]); if(n){ changed(); paintEdit(); toast(`Added ${n} photo${n>1?'s':''}`); } });
+$('fi-one').onchange=async e=>{ const p=P(editId); const n=await addPhotos(p,[...e.target.files]); e.target.value=''; if(n){ changed(); paintEdit(); toast(`Added ${n} photo${n>1?'s':''}`); } };
+$('d-dup').onclick=()=>{ const c=dup(P(editId)); changed(); openEdit(c.id); toast('Duplicated — change the colourway and photos'); };
+$('d-del').onclick=()=>{ const p=P(editId); confirmBox('Delete this shoe?',`“${p.name}${p.colourway?' '+p.colourway:''}” will be removed from the site when you publish.`,'Delete',()=>{ data.products=data.products.filter(x=>x!==p); sel.delete(p.id); changed(); closeEdit(); }); };
+function dup(p){ const c=norm(structuredClone(p)); c.id=uniqueId(p.name+' '+p.colourway+' copy'); c.colourway=p.colourway?p.colourway+' (copy)':''; c.hidden=true; data.products.splice(data.products.indexOf(p)+1,0,c); return c; }
+
+$('b-add').onclick=()=>{ const p=norm({id:uniqueId('new-shoe'),name:'',price:0,sizes:STD,brand:$('f-brand').value&&$('f-brand').value!=='-'?$('f-brand').value:''}); data.products.unshift(p); changed(); openEdit(p.id); setTimeout(()=>$('d-name').focus(),250);
+  const fix=()=>{ const q=data.products.find(x=>x===p); if(q&&q.name&&q.id.startsWith('new-shoe')){ const old=q.id, nid=uniqueId(q.name+' '+q.colourway); q.id=nid; if(editId===old) editId=nid; if(sel.delete(old)) sel.add(nid); $('d-id').value=nid; changed(); } };
+  $('d-name').addEventListener('change',fix,{once:true}); };
+
+/* ---------------- modal helpers ---------------- */
+function modal(html,onOk){ const m=$('modal'); m.innerHTML=html; m.classList.add('on'); $('mscrim').classList.add('on');
+  const ok=m.querySelector('[data-ok]'); if(ok) ok.onclick=async()=>{ const r=await onOk(m); if(r!==false) closeModal(); };
+  m.querySelectorAll('[data-x]').forEach(b=>b.onclick=closeModal); m.querySelectorAll('.seg').forEach(sg=>sg.addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return; sg.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b)); sg.dataset.v=b.dataset.v; sg.dispatchEvent(new Event('seg')); }));
+  const f=m.querySelector('input,select'); if(f) setTimeout(()=>f.focus(),60); }
+function closeModal(){ $('modal').classList.remove('on'); $('mscrim').classList.remove('on'); }
+$('mscrim').onclick=closeModal;
+function confirmBox(t,lead,okTxt,fn){ modal(`<h3>${esc(t)}</h3><p class="lead">${esc(lead)}</p><div class="mf"><button class="btn" data-x>Cancel</button><button class="btn ${/Delete|Discard/.test(okTxt)?'danger':'pri'}" data-ok>${esc(okTxt)}</button></div>`,()=>{ fn(); }); }
+addEventListener('keydown',e=>{ if(e.key==='Escape'){ if($('modal').classList.contains('on')) closeModal(); else if(editId) closeEdit(); } });
+
+/* ---------------- bulk ---------------- */
+const chosen=()=>data.products.filter(p=>sel.has(p.id));
+document.querySelectorAll('[data-bulk]').forEach(b=>b.onclick=()=>bulk(b.dataset.bulk));
+function bulk(k){
+  const L=chosen(); const n=L.length; const lead=`${n} shoe${n>1?'s':''} selected.`;
+  if(k==='clear'){ sel.clear(); render(); return; }
+  if(k==='price') return modal(`<h3>Change price</h3><p class="lead">${lead}</p><div class="mb">
+     <div class="seg" id="m-pm" data-v="set"><button class="on" data-v="set">Set to</button><button data-v="up">Increase</button><button data-v="down">Decrease</button></div>
+     <div class="g2"><input class="in" id="m-amt" type="number" min="0" inputmode="decimal" placeholder="Amount"><div class="seg" id="m-unit" data-v="R"><button class="on" data-v="R">Rand</button><button data-v="%">%</button></div></div>
+     <label class="f"><span>Round to</span><select class="in" id="m-round"><option value="1">Nearest R1</option><option value="10">Nearest R10</option><option value="50">Nearest R50</option><option value="100">Nearest R100</option><option value="99">Ending in 99 (e.g. R2 499)</option></select></label></div>
+     <div class="mf"><button class="btn" data-x>Cancel</button><button class="btn pri" data-ok>Apply</button></div>`,m=>{
+      const mode=$('m-pm').dataset.v, unit=$('m-unit').dataset.v, a=+$('m-amt').value, rd=+$('m-round').value; if(!(a>=0)||$('m-amt').value===''){ toast('Enter an amount',true); return false; }
+      if(mode==='set'&&unit==='%'){ toast('Use Rand to set a price',true); return false; }
+      const rnd=v=>rd===99?Math.max(99,Math.round((v+1)/100)*100-1):Math.round(v/rd)*rd;
+      L.forEach(p=>{ let v=p.price; if(mode==='set') v=a; else { const d=unit==='%'?p.price*a/100:a; v=mode==='up'?p.price+d:p.price-d; } p.price=Math.max(0,rnd(v)); });
+      changed(); render(); toast(`Updated ${n} price${n>1?'s':''}`); });
+  if(k==='sale'||k==='new'||k==='show'){ const key={sale:'onSale',new:'newRelease',show:'hidden'}[k]; const lab={sale:['Put on sale','Take off sale'],new:['Mark as new release','Remove from new releases'],show:['Show on site','Hide from site']}[k];
+    const S=data.settings.sale; const note=k==='sale'&&S.all?'<p class="lead" style="color:var(--amber)">Your sale currently covers the whole store. Putting pairs on sale here also switches it to “selected pairs only”.</p>':'';
+    return modal(`<h3>${k==='sale'?'Sale':k==='new'?'New releases':'Show or hide'}</h3><p class="lead">${lead}</p>${note}<div class="mf"><button class="btn" data-x>Cancel</button><button class="btn" id="m-b">${lab[1]}</button><button class="btn pri" data-ok>${lab[0]}</button></div>`,()=>{
+      L.forEach(p=>p[key]=k==='show'?false:true); if(k==='sale'&&S.all){ S.all=false; } changed(); render(); toast('Done'); }), $('m-b').onclick=()=>{ L.forEach(p=>p[key]=k==='show'); changed(); render(); closeModal(); toast('Done'); }; }
+  if(k==='sizes'){ let mode='set';
+    const grid=()=>`<div class="sizes" id="m-sz">${(showHalf?HALF:WHOLE).map(s=>`<button data-s="${s}" class="${mode==='set'&&STD.includes(s)?'av':''}">${s}</button>`).join('')}</div>`;
+    modal(`<h3>Sizes</h3><p class="lead">${lead}</p><div class="mb">
+      <div class="seg" id="m-sm" data-v="set"><button class="on" data-v="set">Sizes offered</button><button data-v="sold">Mark sold out</button><button data-v="back">Back in stock</button></div>
+      <small style="color:var(--dim)" id="m-sh">Pick the sizes these shoes come in. This replaces their current sizes.</small>${grid()}</div>
+      <div class="mf"><button class="btn" data-x>Cancel</button><button class="btn pri" data-ok>Apply</button></div>`,()=>{
+        const picked=[...document.querySelectorAll('#m-sz button.av,#m-sz button.so')].map(b=>b.dataset.s);
+        if(!picked.length&&mode!=='set'){ toast('Pick at least one size',true); return false; }
+        L.forEach(p=>{ if(mode==='set'){ p.sizes=sortSizes(picked); p.soldOut=p.soldOut.filter(s=>picked.includes(s)); }
+          if(mode==='sold') p.soldOut=sortSizes([...p.soldOut,...picked.filter(s=>p.sizes.includes(s))]);
+          if(mode==='back') p.soldOut=p.soldOut.filter(s=>!picked.includes(s)); });
+        changed(); render(); toast('Sizes updated'); });
+    const sm=$('m-sm'); sm.addEventListener('seg',()=>{ mode=sm.dataset.v; $('m-sh').textContent={set:'Pick the sizes these shoes come in. This replaces their current sizes.',sold:'Pick the sizes that are sold out.',back:'Pick the sizes that are back in stock.'}[mode]; $('m-sz').outerHTML=grid(); });
+    $('modal').addEventListener('click',e=>{ const b=e.target.closest('#m-sz [data-s]'); if(b) b.classList.toggle(mode==='sold'?'so':'av'); });
+    return; }
+  if(k==='brand') { modal(`<h3>Brand &amp; model</h3><p class="lead">${lead}</p><div class="mb"><label class="f"><span>Brand</span><select class="in" id="m-br">${brandOpts(L[0].brand)}</select></label><label class="f"><span>Model</span><select class="in" id="m-md">${modelOpts(L[0].brand,'')}</select></label></div>
+      <div class="mf"><button class="btn" data-x>Cancel</button><button class="btn pri" data-ok>Apply</button></div>`,()=>{ const b=$('m-br').value, md=$('m-md').value; L.forEach(p=>{ p.brand=b; p.model=md; }); changed(); render(); toast('Updated'); });
+    $('m-br').onchange=()=>$('m-md').innerHTML=modelOpts($('m-br').value,''); return; }
+  if(k==='dup'){ const made=L.map(dup); sel=new Set(made.map(p=>p.id)); changed(); render(); toast(`Duplicated ${n} — copies are hidden until you show them`); return; }
+  if(k==='del') return confirmBox(`Delete ${n} shoe${n>1?'s':''}?`,'They’ll be removed from the site when you publish. You can still discard changes before publishing.','Delete',()=>{ data.products=data.products.filter(p=>!sel.has(p.id)); sel.clear(); changed(); render(); toast(`Deleted ${n}`); });
+}
+
+
+/* ---------------- brands ---------------- */
+$('b-brands').onclick=()=>{
+  let tmp=structuredClone(data.settings.brands&&data.settings.brands.length?data.settings.brands:DEF_SETTINGS.brands).map(b=>({...b,_o:b.name})); let open=-1;
+  const cnt=n=>data.products.filter(p=>p.brand===n).length;
+  modal(`<h3>Brands</h3><p class="lead">Add, remove or reorder the brands on your site, and choose the models under each one. Changes go live when you publish.</p>
+    <div class="br-list" id="br-list"></div>
+    <div class="br-add"><input class="in" id="br-new" placeholder="New brand, e.g. Reebok" maxlength="30"><button class="btn sm" id="br-addb" type="button">＋ Add brand</button></div>
+    <div class="mf"><button class="btn" data-x>Cancel</button><button class="btn pri" data-ok>Save brands</button></div>`,()=>{
+      const names=tmp.map(b=>b.name.trim());
+      if(names.some(n=>!n)){ toast('Every brand needs a name',true); return false; }
+      if(new Set(names.map(n=>n.toLowerCase())).size!==names.length){ toast('Two brands have the same name',true); return false; }
+      if(names.some(n=>/^new releases$/i.test(n))){ toast('“New releases” is already used by the site',true); return false; }
+      const gone=data.settings.brands.filter(b=>!tmp.some(t=>t._o===b.name)).map(b=>b.name);
+      for(const t of tmp){ if(t._o&&t._o!==t.name.trim()) data.products.forEach(p=>{ if(p.brand===t._o) p.brand=t.name.trim(); }); }
+      let moved=0; data.products.forEach(p=>{ if(gone.includes(p.brand)){ p.brand=''; p.model=''; moved++; } });
+      data.settings.brands=tmp.map(t=>({name:t.name.trim(),makes:t.makes.map(x=>String(x).trim()).filter(Boolean)}));
+      syncBrands(); changed(); render(); toast(moved?`Brands saved · ${moved} shoe${moved>1?'s':''} moved to “No brand”`:'Brands saved'); });
+  const paint=()=>{ $('br-list').innerHTML=tmp.map((b,i)=>{ const n=cnt(b._o||b.name);
+      return `<div class="br-row${open===i?' open':''}" data-i="${i}">
+        <div class="br-top"><span class="br-mv"><button type="button" data-a="up" ${i?'':'disabled'} aria-label="Move up">↑</button><button type="button" data-a="down" ${i<tmp.length-1?'':'disabled'} aria-label="Move down">↓</button></span>
+        <input class="in br-name" data-a="name" value="${esc(b.name)}" maxlength="30">
+        <span class="br-meta">${n} shoe${n===1?'':'s'} · ${b.makes.length} model${b.makes.length===1?'':'s'}</span>
+        <button type="button" class="btn sm" data-a="models">${open===i?'Done':'Models'}</button><button type="button" class="ic br-del" data-a="del" aria-label="Remove brand">✕</button></div>
+        ${open===i?`<label class="f br-models"><span>Models — one per line</span><textarea class="in" data-a="makes" rows="6">${esc(b.makes.join('\n'))}</textarea><small>Shoes are filed under a model on the brand page when their model matches one of these.</small></label>`:''}</div>`; }).join('')||'<p class="lead">No brands yet.</p>'; };
+  paint();
+  $('br-list').addEventListener('click',e=>{ const b=e.target.closest('[data-a]'); if(!b||b.tagName==='INPUT'||b.tagName==='TEXTAREA') return; const i=+b.closest('.br-row').dataset.i, a=b.dataset.a;
+    if(a==='up'&&i>0){ [tmp[i-1],tmp[i]]=[tmp[i],tmp[i-1]]; if(open===i) open=i-1; else if(open===i-1) open=i; }
+    if(a==='down'&&i<tmp.length-1){ [tmp[i+1],tmp[i]]=[tmp[i],tmp[i+1]]; if(open===i) open=i+1; else if(open===i+1) open=i; }
+    if(a==='models') open=open===i?-1:i;
+    if(a==='del'){ const n=cnt(tmp[i]._o||tmp[i].name); if(n&&!confirm(`${tmp[i].name} has ${n} shoe${n>1?'s':''}. They’ll stay in your list under “No brand” and won’t show on a brand page. Remove the brand?`)) return; tmp.splice(i,1); open=-1; }
+    paint(); });
+  $('br-list').addEventListener('input',e=>{ const r=e.target.closest('.br-row'); if(!r) return; const t=tmp[+r.dataset.i];
+    if(e.target.dataset.a==='name') t.name=e.target.value; if(e.target.dataset.a==='makes') t.makes=e.target.value.split('\n'); });
+  const add=()=>{ const v=$('br-new').value.trim(); if(!v) return; if(tmp.some(b=>b.name.toLowerCase()===v.toLowerCase())){ toast('That brand is already there',true); return; }
+    tmp.push({name:v,makes:[],_o:null}); open=tmp.length-1; $('br-new').value=''; paint(); toast(`Added ${v} — add its models, then save`); };
+  $('br-addb').onclick=add; $('br-new').addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); add(); } });
+};
+
+/* ---------------- settings ---------------- */
+const toLocalInput=iso=>{ const d=new Date(iso); if(isNaN(d)) return ''; const z=n=>String(n).padStart(2,'0'); return `${d.getFullYear()}-${z(d.getMonth()+1)}-${z(d.getDate())}T${z(d.getHours())}:${z(d.getMinutes())}`; };
+$('b-settings').onclick=()=>{ const S=data.settings, s=S.sale||{}; const N=JSON.parse(localStorage.getItem('cult-netlify')||'{}');
+  modal(`<h3>Shop settings</h3><p class="lead">These go live when you publish.</p><div class="mb">
+    <div class="sw"><div><b>Sale running</b><small>Shows sale prices and the sale banner</small></div><label class="tog"><input type="checkbox" id="s-on" ${s.on?'checked':''}><i></i></label></div>
+    <div class="g2"><label class="f"><span>Sale name</span><input class="in" id="s-name" value="${esc(s.name||'Black Friday')}"></label><label class="f"><span>Discount %</span><input class="in" id="s-pct" type="number" min="1" max="90" value="${s.pct||15}"></label></div>
+    <label class="f"><span>Ends</span><input class="in" id="s-end" type="datetime-local" value="${toLocalInput(s.ends||'2026-11-30T23:59:59+02:00')}"></label>
+    <div class="f"><span>Applies to</span><div class="seg" id="s-all" data-v="${s.all?'all':'sel'}"><button data-v="all" class="${s.all?'on':''}">Whole store</button><button data-v="sel" class="${s.all?'':'on'}">Only pairs marked “Sale”</button></div></div>
+    <div class="g2"><label class="f"><span>Free delivery over (R)</span><input class="in" id="s-free" type="number" min="0" value="${S.freeOver??''}"></label><label class="f"><span>Delivery fee (R)</span><input class="in" id="s-fee" type="number" min="0" placeholder="Blank = confirm on WhatsApp" value="${S.deliveryFee??''}"></label></div>
+    <label class="f"><span>Return window (days)</span><input class="in" id="s-ret" type="number" min="0" value="${S.returnsDays??7}"></label>
+    <hr style="border:0;border-top:1px solid var(--line)">
+    <b>Netlify connection</b><small style="color:var(--dim)">For one-click publishing. Saved only on this device.</small>
+    <label class="f"><span>Site address</span><input class="in" id="n-site" placeholder="e.g. cult-sneakers.netlify.app" value="${esc(N.site||(/netlify\.app$/.test(location.hostname)?location.hostname:''))}"></label>
+    <label class="f"><span>Personal access token</span><input class="in" id="n-tok" type="password" placeholder="Paste from Netlify → User settings → Applications" value="${esc(N.token||'')}"></label>
+    <button class="btn sm" id="n-help" type="button" style="align-self:flex-start">How do I get a token?</button>
+    </div><div class="mf"><button class="btn" data-x>Cancel</button><button class="btn pri" data-ok>Save</button></div>`,()=>{
+      const pct=Math.round(+$('s-pct').value); if($('s-on').checked&&!(pct>0&&pct<91)){ toast('Discount must be 1–90%',true); return false; }
+      const end=new Date($('s-end').value);
+      S.sale={on:$('s-on').checked,name:$('s-name').value.trim()||'Sale',pct:pct||15,ends:isNaN(end)?s.ends:end.toISOString(),all:$('s-all').dataset.v==='all'};
+      S.freeOver=$('s-free').value===''?null:Math.round(+$('s-free').value); S.deliveryFee=$('s-fee').value===''?null:Math.round(+$('s-fee').value); S.returnsDays=Math.round(+$('s-ret').value||0);
+      localStorage.setItem('cult-netlify',JSON.stringify({site:$('n-site').value.trim().replace(/^https?:\/\//,'').replace(/\/.*$/,''),token:$('n-tok').value.trim()}));
+      changed(); render(); toast('Settings saved'); });
+  $('n-help').onclick=()=>{ const a=$('n-help'); a.outerHTML=`<ol><li>Log in at <b>app.netlify.com</b>.</li><li>Click your profile picture → <b>User settings</b> → <b>Applications</b> (or OAuth) → <b>Personal access tokens</b> → <b>New access token</b>.</li><li>Name it “CULT admin”, choose an expiry, and copy the token.</li><li>Paste it here. Keep it private — anyone with it can change your site.</li></ol>`; };
+};
+
+/* ---------------- CSV ---------------- */
+const COLS=['id','brand','model','name','colourway','price','sizes','sold_out','on_sale','new_release','visible','description','images'];
+function toCSV(){ const q=v=>{ v=String(v??''); return /[",\n;]/.test(v)?`"${v.replace(/"/g,'""')}"`:v; };
+  return '﻿'+[COLS.join(','),...data.products.map(p=>[p.id,p.brand,p.model,p.name,p.colourway,p.price,p.sizes.join(' '),p.soldOut.join(' '),p.onSale?'yes':'no',p.newRelease?'yes':'no',p.hidden?'no':'yes',p.desc,p.images.join(' ')].map(q).join(','))].join('\r\n'); }
+function parseCSV(t){ t=t.replace(/^﻿/,''); const sep=(t.split('\n')[0].match(/;/g)||[]).length>(t.split('\n')[0].match(/,/g)||[]).length?';':',';
+  const rows=[]; let row=[], f='', q=false;
+  for(let i=0;i<t.length;i++){ const c=t[i];
+    if(q){ if(c==='"'){ if(t[i+1]==='"'){ f+='"'; i++; } else q=false; } else f+=c; }
+    else if(c==='"') q=true; else if(c===sep){ row.push(f); f=''; } else if(c==='\n'||c==='\r'){ if(c==='\r'&&t[i+1]==='\n') i++; row.push(f); rows.push(row); row=[]; f=''; } else f+=c; }
+  if(f||row.length){ row.push(f); rows.push(row); } return rows.filter(r=>r.some(x=>x.trim())); }
+const yes=v=>/^(y|yes|true|1|x|✓)$/i.test(String(v).trim());
+function importCSV(text){
+  const rows=parseCSV(text); if(rows.length<2) throw new Error('The file has no rows');
+  const h=rows[0].map(x=>x.trim().toLowerCase().replace(/\s+/g,'_')); const ix=k=>h.indexOf(k);
+  if(ix('name')<0&&ix('id')<0) throw new Error('Missing a “name” or “id” column');
+  let up=0, add=0;
+  for(const r of rows.slice(1)){ const g=k=>ix(k)>=0?(r[ix(k)]??'').trim():undefined;
+    let p=g('id')?P(g('id')):null; const isNew=!p;
+    if(!p){ const nm=g('name'); if(!nm) continue; p=norm({id:g('id')?slug(g('id')):uniqueId(nm+' '+(g('colourway')||'')),sizes:STD}); data.products.push(p); }
+    const brand=g('brand'); if(brand!==undefined){ const b=BRANDS.find(x=>x.toLowerCase()===brand.toLowerCase()); p.brand=b||''; }
+    for(const [k,f] of [['model','model'],['name','name'],['colourway','colourway'],['description','desc']]) if(g(k)!==undefined) p[f]=g(k);
+    if(g('price')!==undefined&&g('price')!=='') p.price=Math.max(0,Math.round(+String(g('price')).replace(/[^\d.]/g,'')||0));
+    if(g('sizes')!==undefined) p.sizes=sortSizes(g('sizes').split(/[\s,;|]+/).filter(Boolean));
+    if(g('sold_out')!==undefined) p.soldOut=sortSizes(g('sold_out').split(/[\s,;|]+/).filter(s=>s&&p.sizes.includes(s)));
+    if(g('on_sale')!==undefined) p.onSale=yes(g('on_sale')); if(g('new_release')!==undefined) p.newRelease=yes(g('new_release'));
+    if(g('visible')!==undefined) p.hidden=!yes(g('visible'));
+    if(g('images')!==undefined&&g('images')) p.images=g('images').split(/\s+/).filter(Boolean);
+    isNew?add++:up++; }
+  return {up,add};
+}
+const download=(name,blob)=>{ const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name; document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); },1500); };
+const pop=(btn,popEl)=>{ $(btn).onclick=e=>{ e.stopPropagation(); document.querySelectorAll('.menu-pop').forEach(x=>x!==$(popEl)&&x.classList.remove('on')); $(popEl).classList.toggle('on'); }; };
+pop('b-more','more-pop'); pop('b-publish','pub-pop'); document.addEventListener('click',()=>document.querySelectorAll('.menu-pop').forEach(x=>x.classList.remove('on')));
+$('more-pop').addEventListener('click',e=>{ const b=e.target.closest('[data-more]'); if(!b) return; const k=b.dataset.more;
+  if(k==='export') download(`cult-products-${new Date().toISOString().slice(0,10)}.csv`,new Blob([toCSV()],{type:'text/csv;charset=utf-8'}));
+  if(k==='import') $('fi-csv').click(); if(k==='restore') $('fi-json').click(); });
+$('fi-csv').onchange=async e=>{ const f=e.target.files[0]; e.target.value=''; if(!f) return; try{ const r=importCSV(await f.text()); changed(); render(); toast(`Updated ${r.up}, added ${r.add}`); }catch(err){ toast(err.message,true); } };
+$('fi-json').onchange=async e=>{ const f=e.target.files[0]; e.target.value=''; if(!f) return; try{ const j=JSON.parse(await f.text()); if(!Array.isArray(j.products)) throw new Error('Not a CULT products file'); data={settings:Object.assign(structuredClone(DEF_SETTINGS),j.settings||{}),products:j.products.map(norm)}; sel.clear(); syncBrands(); changed(); render(); toast(`Loaded ${data.products.length} products`); }catch(err){ toast(err.message,true); } };
+
+/* ---------------- zip (store, no compression) ---------------- */
+const CRC=(()=>{ const t=new Uint32Array(256); for(let n=0;n<256;n++){ let c=n; for(let k=0;k<8;k++) c=c&1?0xEDB88320^(c>>>1):c>>>1; t[n]=c>>>0; } return b=>{ let c=0xFFFFFFFF; for(let i=0;i<b.length;i++) c=t[(c^b[i])&255]^(c>>>8); return (c^0xFFFFFFFF)>>>0; }; })();
+function makeZip(files){ // [{name, data:Uint8Array}]
+  const enc=new TextEncoder(), parts=[], cen=[]; let off=0; const d=new Date();
+  const dt=((d.getHours()<<11)|(d.getMinutes()<<5)|(d.getSeconds()>>1))&0xFFFF, dd=(((d.getFullYear()-1980)<<9)|((d.getMonth()+1)<<5)|d.getDate())&0xFFFF;
+  for(const f of files){ const nm=enc.encode(f.name), crc=CRC(f.data), sz=f.data.length;
+    const h=new DataView(new ArrayBuffer(30)); h.setUint32(0,0x04034b50,true); h.setUint16(4,20,true); h.setUint16(6,0x0800,true); h.setUint16(8,0,true); h.setUint16(10,dt,true); h.setUint16(12,dd,true); h.setUint32(14,crc,true); h.setUint32(18,sz,true); h.setUint32(22,sz,true); h.setUint16(26,nm.length,true); h.setUint16(28,0,true);
+    parts.push(new Uint8Array(h.buffer),nm,f.data);
+    const c=new DataView(new ArrayBuffer(46)); c.setUint32(0,0x02014b50,true); c.setUint16(4,20,true); c.setUint16(6,20,true); c.setUint16(8,0x0800,true); c.setUint16(10,0,true); c.setUint16(12,dt,true); c.setUint16(14,dd,true); c.setUint32(16,crc,true); c.setUint32(20,sz,true); c.setUint32(24,sz,true); c.setUint16(28,nm.length,true); c.setUint32(38,0,true); c.setUint32(42,off,true);
+    cen.push(new Uint8Array(c.buffer),nm); off+=30+nm.length+sz; }
+  const cs=cen.reduce((s,a)=>s+a.length,0); const e=new DataView(new ArrayBuffer(22)); e.setUint32(0,0x06054b50,true); e.setUint16(8,files.length,true); e.setUint16(10,files.length,true); e.setUint32(12,cs,true); e.setUint32(16,off,true);
+  return new Blob([...parts,...cen,new Uint8Array(e.buffer)],{type:'application/zip'});
+}
+
+/* ---------------- publish ---------------- */
+async function buildSite(progress){
+  const files=[], warn=[]; const bytes=async u=>{ const r=await fetch(u+(u.includes('?')?'&':'?')+'v='+Date.now(),{cache:'no-store'}); if(!r.ok) throw new Error(u+' '+r.status); return new Uint8Array(await r.arrayBuffer()); };
+  const out={settings:data.settings,products:data.products.map(norm),updated:new Date().toISOString()};
+  const paths=[...new Set(out.products.flatMap(p=>p.images).filter(x=>/^images\//.test(x)))];
+  const total=paths.length+3; let done=0; const tick=()=>progress&&progress(++done/total);
+  for(const f of ['index.html','admin.html']){ try{ let b=await bytes(f);
+      if(f==='index.html'&&/^https?:$/.test(location.protocol)){ const t=new TextDecoder().decode(b); b=new TextEncoder().encode(t.replace(/(<meta (?:property="og:image"|name="twitter:image") content=")[^"]*(")/g,`$1${location.origin}/og-image.png$2`)); }
+      files.push({name:f,data:b}); }catch(e){ warn.push(f); } tick(); }
+  for(const extra of ['_headers','robots.txt','og-image.png']){ try{ files.push({name:extra,data:await bytes(extra)}); }catch(e){} }
+  files.push({name:'products.json',data:new TextEncoder().encode(JSON.stringify(out,null,1))}); tick();
+  for(const p of paths){ try{ const b=await getBlob(p); files.push({name:p,data:b?new Uint8Array(await b.arrayBuffer()):await bytes(p)}); }catch(e){ warn.push(p); } tick(); }
+  return {zip:makeZip(files),warn,out};
+}
+function progressModal(title){ modal(`<h3>${esc(title)}</h3><p class="lead" id="pg-t">Packing your site…</p><div class="prog"><i id="pg-b"></i></div>`); return {set:(f,t)=>{ $('pg-b').style.width=Math.round(f*100)+'%'; if(t) $('pg-t').textContent=t; }}; }
+async function afterPublish(out){ live=JSON.stringify({settings:out.settings,products:out.products}); for(const k of await DB.keys('blobs').catch(()=>[])) if(!out.products.some(p=>p.images.includes(k))){ await delBlob(k); } changed(); }
+$('pub-pop').addEventListener('click',async e=>{ const b=e.target.closest('[data-pub]'); if(!b) return; const k=b.dataset.pub;
+  if(k==='json'){ download('products.json',new Blob([JSON.stringify({settings:data.settings,products:data.products.map(norm),updated:new Date().toISOString()},null,1)],{type:'application/json'})); return; }
+  if(k==='discard'){ if(!dirty){ toast('Nothing to discard'); return; } return confirmBox('Discard unpublished changes?','Your products go back to what’s live on the site now. Photos you added since will be removed.','Discard',async()=>{ data=JSON.parse(live); data.products=data.products.map(norm); syncBrands(); await DB.del('kv','draft'); for(const k of [...await DB.keys('blobs').catch(()=>[]),...mem.keys()]) if(!data.products.some(p=>p.images.includes(k))) await delBlob(k); sel.clear(); changed(); render(); toast('Changes discarded'); }); }
+  if(k==='zip'){ const pm=progressModal('Download site'); try{ const {zip,warn}=await buildSite(f=>pm.set(f));
+      download('cult-site.zip',zip); closeModal();
+      modal(`<h3>Your site is downloaded</h3><p class="lead">To put it online:</p><ol><li>Unzip <b>cult-site.zip</b>.</li><li>Open <b>app.netlify.com</b> → your site → <b>Deploys</b>.</li><li>Drag the unzipped <b>cult-site</b> folder onto the box that says “Drag and drop your site output folder here”.</li></ol>${warn.length?`<p class="lead" style="color:var(--amber);margin-top:12px">Couldn’t include: ${esc(warn.join(', '))}. ${warn.includes('index.html')?'Open this admin page from your live site so the shop page is included.':''}</p>`:''}<div class="mf"><button class="btn" data-x>Close</button><button class="btn pri" data-ok>I’ve uploaded it</button></div>`,async()=>{ await afterPublish(JSON.parse(snapshot())); toast('Marked as published'); });
+    }catch(err){ closeModal(); toast('Couldn’t build the zip: '+err.message,true); } return; }
+  if(k==='netlify'){ const N=JSON.parse(localStorage.getItem('cult-netlify')||'{}');
+    if(!N.site||!N.token){ toast('Add your Netlify site address and token in Shop settings first',true); $('b-settings').click(); return; }
+    const pm=progressModal('Publishing'); try{
+      const {zip,warn,out}=await buildSite(f=>pm.set(f*.6));
+      if(warn.includes('index.html')) throw new Error('Couldn’t read your shop page (index.html). Open this admin page from your live site.');
+      pm.set(.65,'Uploading to Netlify…');
+      const r=await fetch(`https://api.netlify.com/api/v1/sites/${encodeURIComponent(N.site)}/deploys`,{method:'POST',headers:{'Content-Type':'application/zip','Authorization':'Bearer '+N.token},body:zip});
+      if(r.status===401) throw new Error('Netlify rejected the token — check it in Shop settings');
+      if(r.status===404) throw new Error('Netlify couldn’t find that site address — check it in Shop settings');
+      if(!r.ok) throw new Error('Netlify said '+r.status);
+      const dep=await r.json(); pm.set(.8,'Netlify is processing your site…');
+      let state=dep.state; for(let i=0;i<40&&!['ready','error'].includes(state);i++){ await new Promise(s=>setTimeout(s,1500)); try{ const q=await fetch(`https://api.netlify.com/api/v1/deploys/${dep.id}`,{headers:{'Authorization':'Bearer '+N.token}}); state=(await q.json()).state; }catch(e){} pm.set(Math.min(.98,.8+i*.01)); }
+      if(state==='error') throw new Error('Netlify couldn’t process the upload');
+      await afterPublish(out); pm.set(1,'Live!'); setTimeout(closeModal,700); toast(state==='ready'?'Published — your site is updated':'Uploaded — it’ll be live in a minute');
+    }catch(err){ closeModal(); const net=err instanceof TypeError; toast(net?'Couldn’t reach Netlify from this browser — use “Download site (.zip)” instead':err.message,true); }
+  }
+});
+$('bn-pub').onclick=e=>{ e.stopPropagation(); $('b-publish').click(); };
+addEventListener('beforeunload',e=>{ clearTimeout(saveT); DB.set('kv','draft',{at:Date.now(),data:JSON.parse(snapshot()),live}).catch(()=>{}); });
+
+boot().catch(err=>{ console.error(err); toast('Couldn’t start the admin: '+err.message,true); });
+})();
+</script>
+</body>
+</html>
