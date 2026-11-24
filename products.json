@@ -4,7 +4,7 @@
    "on": false,
    "name": "Sale",
    "pct": 15,
-   "ends": "2026-12-31T23:59:59+02:00",
+   "ends": "2026-12-31T21:59:00.000Z",
    "all": false
   },
   "freeOver": 2500,
@@ -135,6 +135,32 @@
   ]
  },
  "products": [
+  {
+   "id": "air-jordan-4",
+   "brand": "Jordan",
+   "model": "Air Jordan 4",
+   "name": "Air Jordan 4",
+   "colourway": "Black Cat",
+   "price": 1300,
+   "sizes": [
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",
+    "10",
+    "11",
+    "12"
+   ],
+   "soldOut": [],
+   "images": [
+    "images/new-shoe-mwufg9ur72u.webp"
+   ],
+   "onSale": false,
+   "newRelease": true,
+   "hidden": false,
+   "desc": ""
+  },
   {
    "id": "aj1-chicago",
    "brand": "Jordan",
@@ -1120,5 +1146,5 @@
    "desc": "Air Jordan Dub Zero in the colourway pictured. Model first released in 2005."
   }
  ],
- "updated": "2026-11-20T10:30:00+02:00"
+ "updated": "2026-11-24T08:45:12.969Z"
 }
